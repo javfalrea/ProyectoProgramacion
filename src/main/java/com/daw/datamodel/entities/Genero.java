@@ -1,14 +1,15 @@
 package com.daw.datamodel.entities;
 
+/**
+ * Clase que gestionaa la información básica de un género
+ * incluyendo su identificador, código y nombre.
+ * 
+ * @author Javier Falcón Real
+ * @version 1.0
+ */
+
+
 public class Genero {
-	
-	/**
-	 * Clase que gestionaa la información básica de un género
-	 * incluyendo su identificador, código y nombre.
-	 * 
-	 * @author Javier Falcón Real
-	 * @version 1.0
-	 */
 	
 	private Long id;
 	private Long codigo;

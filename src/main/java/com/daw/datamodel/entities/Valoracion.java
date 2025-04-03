@@ -2,7 +2,7 @@ package com.daw.datamodel.entities;
 
 /**
  * Clase que gestiona la información básica de una valoración
- * incluyendo su identificador, nota, crítica y recomendación.
+ * incluyendo su identificador, película a la que referencia, nota, crítica y recomendación.
  * 
  * @author Javier Falcón Real
  * @version 1.0
@@ -10,13 +10,13 @@ package com.daw.datamodel.entities;
 
 public class Valoracion {
 	
-	private Long id;
+	private Pelicula pelicula;
 	private Float nota;
 	private String critica;
 	private Boolean recomendada;
 	
-	public Valoracion(Long id, Float nota, String critica, Boolean recomendada) {
-		this.id = id;
+	public Valoracion(Pelicula pelicula, Float nota, String critica, Boolean recomendada) {
+		this.setPelicula(pelicula);
 		this.nota = nota;
 		this.critica = critica;
 		this.recomendada = recomendada;
@@ -25,18 +25,18 @@ public class Valoracion {
 	/* Este segundo constructor será necesario pues podemos insertar valoraciones 
 	 * que no tengan en principio una crítica asignada.
 	 */
-	public Valoracion(Long id, Float nota, Boolean recomendada) {
-		this.id = id;
+	public Valoracion(Pelicula pelicula, Float nota, Boolean recomendada) {
+		this.pelicula = pelicula;
 		this.nota = nota;
 		this.recomendada = recomendada;
 	}
 
-	public Long getId() {
-		return id;
+	public Pelicula getPelicula() {
+		return pelicula;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPelicula(Pelicula pelicula) {
+		this.pelicula = pelicula;
 	}
 
 	public Float getNota() {

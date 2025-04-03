@@ -16,13 +16,13 @@ public class Participante {
 	
 	private Long id;
 	private String nombre;
-	private String nacionalidad;
+	private Pais pais;
 	private Date fechaNacimiento;
 	
-	public Participante(Long id, String nombre, String nacionalidad, Date fechaNacimiento) {
+	public Participante(Long id, String nombre, Pais pais, Date fechaNacimiento) {
 		this.id = id;
 		this.nombre = nombre;
-		this.nacionalidad = nacionalidad;
+		this.pais = pais;
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
@@ -42,12 +42,12 @@ public class Participante {
 		this.nombre = nombre;
 	}
 
-	public String getNacionalidad() {
-		return nacionalidad;
+	public Pais getPais() {
+		return pais;
 	}
 
-	public void setNacionalidad(String nacionalidad) {
-		this.nacionalidad = nacionalidad;
+	public void setPais(Pais pais) {
+		this.pais = pais;
 	}
 
 	public Date getFechaNacimiento() {
