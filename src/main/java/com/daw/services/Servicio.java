@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.daw.datamodel.entities.Pais;
 import com.daw.datamodel.entities.Pelicula;
 import com.daw.datamodel.entities.Valoracion;
 
@@ -23,84 +24,54 @@ public class Servicio {
 			e.printStackTrace();
 		}
 	}
-	
-	public List<Pelicula> buscarPeliculas(String nombreBq, String actorBq, String directorBq, String paisBq) throws SQLException {
-		//Hay que implementar.
-		return null;
+
+	public Pelicula crearPelicula(String titulo, Integer anioEstreno, Long idPais, Integer duracion, String sinopsis) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertPelicula = "INSERT INTO pelicula (titulo, anio_estreno, id_pais, duracion, sinopsis) VALUES(?,?,?,?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertPelicula, Statement.RETURN_GENERATED_KEYS); // Asegurarse de que obtenemos las claves generadas
+	    ps.setString(1, titulo);
+	    ps.setInt(2, anioEstreno);
+	    ps.setLong(3, idPais);
+	    ps.setInt(4, duracion);
+	    ps.setString(5, sinopsis);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar la película.");
+	    }
+
+	    ResultSet generatedKeys = ps.getGeneratedKeys();
+	    Long idPelicula = null;
+	    if (generatedKeys.next()) {
+	        idPelicula = generatedKeys.getLong(1); // Obtener el ID generado
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID de la película insertada.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPais);
+	    ps2.setLong(1, idPais);
+	    ResultSet rs = ps2.executeQuery();
+	    String continente = null;
+	    String nombre = null;
+	    if (rs.next()) {
+	        continente = rs.getString("continente");
+	        nombre = rs.getString("nombre");
+	    } else {
+	        throw new SQLException("El país seleccionado no existe en el sistema.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+
+	    rs.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
 	}
-	
-	public Valoracion crearModificarValoracion(Float nota, String critica, Boolean recomendada, Long idPelicula) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
-		
-		int contador = 0;
-		String yaValorada = "SELECT COUNT(*) INTO " + contador + " FROM pelicula WHERE id = " + idPelicula;
-		Statement stmt = conn.createStatement();
-		stmt.execute(yaValorada);
-		
-		if(contador == 1) {
-			Long idValoracion = null;
-			String guardarIdValoracion = "SELECT id_valoracion INTO " + idValoracion + " FROM pelicula WHERE id = " + idPelicula;
-			Statement stmt2 = conn.createStatement();
-			stmt2.execute(guardarIdValoracion);
-			String sql = "UPDATE valoracion SET nota = ?, critica = ?, recomendada = ? WHERE id_pelicula = ?";
-			// Tendré que cambiar la base de datos para que valoración también tenga la id de película.
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setFloat(1, nota);
-			ps.setString(2,critica);
-			ps.setBoolean(3, recomendada);
-			ps.setLong(4, idPelicula);	
-			ps.executeUpdate();
-			
-			int respuesta = ps.executeUpdate();
-			if(respuesta==1) {
-				System.out.println("Modificación correcta.");
-			} else {
-				throw new SQLException("No se ha podido modificar la valoración.");
-			}
-			ps.close();
-			conn.close();
-		} else {
-			String sql = "INSERT INTO valoracion (nota, critica, recomendada, id_pelicula) VALUES(?,?,?,?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setFloat(1, nota);
-			ps.setString(2, critica);
-			ps.setBoolean(3, recomendada);
-			ps.setLong(4, idPelicula);
-			
-			int respuesta = ps.executeUpdate();
-			if(respuesta==1) {
-				System.out.println("Insercion correcta.");
-			} else {
-				throw new SQLException("No se ha podido crear la valoración.");
-			}
-			ps.close();
-			conn.close();
-			return new Valoracion(null, nota, recomendada);
-		}
-	 // Este método está inacabado.
-	}
-	
-	public Pelicula crearPelicula(String titulo, Integer anioEstreno, String pais, Integer duracion, String sinopsis) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
-		
-		String sql = "INSERT INTO pelicula (titulo, anio_estreno, pais, duracion, sinopsis) VALUES(?,?,?,?,?)";
-		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, titulo);
-		ps.setInt(2, anioEstreno);
-		ps.setString(3, pais);
-		ps.setInt(4, duracion);
-		ps.setString(5, sinopsis);
-	
-		int respuesta = ps.executeUpdate();
-		if(respuesta==1) {
-			System.out.println("Insercion correcta.");
-		} else {
-			throw new SQLException("No se ha podido insertar la película.");
-		}
-		ps.close();
-		conn.close();
-		return new Pelicula(null, titulo, anioEstreno, pais, duracion, sinopsis);
-	}
+
 
 
 //	public List<Autor> buscarAutores(String nombreBusqueda) throws SQLException {

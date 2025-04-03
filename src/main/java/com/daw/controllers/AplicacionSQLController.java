@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.daw.datamodel.entities.Pais;
 import com.daw.services.Servicio;
 
 @RestController
@@ -17,36 +18,14 @@ public class AplicacionSQLController {
 	@Autowired
 	private Servicio servicio;
 	
-	@GetMapping("/buscar_peliculas")
-	public ResponseEntity<?> buscarPeliculas(@RequestParam String nombre, 
-			@RequestParam String actor, 
-			@RequestParam String director, 
-			@RequestParam String pais){
-		try {
-			return ResponseEntity.ok().body(servicio.buscarPeliculas(nombre, actor, director, pais));
-		} catch (SQLException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-	}
-	
-	@GetMapping("/crear_valoracion")
-	public ResponseEntity<?> crearValoracion(@RequestParam Float nota,
-			@RequestParam Boolean recomendada){
-		try {
-			return ResponseEntity.ok().body(servicio.crearValoracion(nota, recomendada));
-		} catch (SQLException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
-		}
-	}
-	
 	@GetMapping("/crear_pelicula")
 	public ResponseEntity<?> crearPelicula(@RequestParam String titulo,
 			@RequestParam Integer anioEstreno,			
-			@RequestParam String pais,
+			@RequestParam Long idPais,
 			@RequestParam Integer duracion,
 			@RequestParam String sinopsis){
 		try {
-			return ResponseEntity.ok().body(servicio.crearPelicula(titulo, anioEstreno, pais, duracion, sinopsis));
+			return ResponseEntity.ok().body(servicio.crearPelicula(titulo, anioEstreno, idPais, duracion, sinopsis));
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
