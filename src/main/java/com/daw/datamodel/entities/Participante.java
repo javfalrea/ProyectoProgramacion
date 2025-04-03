@@ -1,4 +1,4 @@
-package com.daw.controllers;
+package com.daw.datamodel.entities;
 
 import java.sql.Date;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.daw.controllers;
+package com.daw.datamodel.entities;
 
 public class Genero {
 	
