@@ -30,28 +30,23 @@ public class AplicacionSQLController {
 	}
 	
 	@GetMapping("/crear_valoracion")
-	public ResponseEntity<?> crearAutor(@RequestParam String nombre,
-			@RequestParam String dni,
-			@RequestParam String direccion,
-			@RequestParam Date fechaNacimiento){
+	public ResponseEntity<?> crearValoracion(@RequestParam Float nota,
+			@RequestParam Boolean recomendada){
 		try {
-			return ResponseEntity.ok().body(servicio.crearAutor(nombre, dni, direccion, fechaNacimiento));
+			return ResponseEntity.ok().body(servicio.crearValoracion(nota, recomendada));
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
 	}
 	
-	@GetMapping("/crear_libro")
-	public ResponseEntity<?> crearLibro(@RequestParam String titulo,
-			@RequestParam String descripcion,			
-			@RequestParam Boolean favorite,
-			@RequestParam Long idCategoria,
-			@RequestParam Long idEditorial,
-			@RequestParam Date fechaPublicacion,
-			@RequestParam String isbn,
-			@RequestParam String idioma){
+	@GetMapping("/crear_pelicula")
+	public ResponseEntity<?> crearPelicula(@RequestParam String titulo,
+			@RequestParam Integer anioEstreno,			
+			@RequestParam String pais,
+			@RequestParam Integer duracion,
+			@RequestParam String sinopsis){
 		try {
-			return ResponseEntity.ok().body(servicio.crearLibro(titulo, descripcion, favorite, fechaPublicacion, isbn, idioma, idCategoria, idEditorial));
+			return ResponseEntity.ok().body(servicio.crearPelicula(titulo, anioEstreno, pais, duracion, sinopsis));
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
