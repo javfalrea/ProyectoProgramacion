@@ -1,7 +1,7 @@
 package com.daw.controllers;
 
 /**
- * Esta clase permite gestionar la información básica de una valoración
+ * Clase que gestiona la información básica de una valoración
  * incluyendo su identificador, nota, crítica y recomendación.
  * 
  * @author Javier Falcón Real

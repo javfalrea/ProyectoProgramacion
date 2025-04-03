@@ -1,7 +1,7 @@
 package com.daw.controllers;
 
 /**
- * Esta clase permite gestionar la información básica de una película
+ * Clase que gestiona la información básica de una película
  * incluyendo su identificador, título, año de estreno, país, duración
  * sinopsis y el identificador de la valoración asociada.
  * 

@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.time.Period;
 
 /**
- * Esta clase permite gestionar la información básica de un participante
- * incluyendo su id, nombre, nacionalidad y fecha de nacimiento.
+ * Clase que gestiona la información básica de un participante
+ * incluyendo su identificador, nombre, nacionalidad y fecha de nacimiento.
  * 
  * @author Javier Falcón Real
  * @version 1.0
