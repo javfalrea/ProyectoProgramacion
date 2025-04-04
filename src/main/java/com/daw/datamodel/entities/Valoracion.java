@@ -15,19 +15,10 @@ public class Valoracion {
 	private String critica;
 	private Boolean recomendada;
 	
-	public Valoracion(Pelicula pelicula, Float nota, String critica, Boolean recomendada) {
+	public Valoracion(Pelicula pelicula, Float nota, Boolean recomendada, String critica) {
 		this.setPelicula(pelicula);
 		this.nota = nota;
 		this.critica = critica;
-		this.recomendada = recomendada;
-	}
-	
-	/* Este segundo constructor será necesario pues podemos insertar valoraciones 
-	 * que no tengan en principio una crítica asignada.
-	 */
-	public Valoracion(Pelicula pelicula, Float nota, Boolean recomendada) {
-		this.pelicula = pelicula;
-		this.nota = nota;
 		this.recomendada = recomendada;
 	}
 

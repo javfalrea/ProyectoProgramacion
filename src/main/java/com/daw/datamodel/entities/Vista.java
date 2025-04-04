@@ -16,10 +16,10 @@ public class Vista {
 	private Date fecha;
 	private Pelicula pelicula;
 	
-	public Vista(Long id, Date fecha, Pelicula pelicula) {
+	public Vista(Long id, Pelicula pelicula, Date fecha) {
 		this.id = id;
-		this.fecha = fecha;
 		this.pelicula = pelicula;
+		this.fecha = fecha;
 	}
 
 	public Long getId() {

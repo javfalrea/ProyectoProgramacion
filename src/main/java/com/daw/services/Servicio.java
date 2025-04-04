@@ -1,18 +1,20 @@
 package com.daw.services;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.daw.datamodel.entities.Pais;
+import com.daw.datamodel.entities.Participante;
 import com.daw.datamodel.entities.Pelicula;
 import com.daw.datamodel.entities.Valoracion;
+import com.daw.datamodel.entities.Vista;
 
 @Service
 public class Servicio {
@@ -71,7 +73,379 @@ public class Servicio {
 
 	    return new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
 	}
+	
+	public Pelicula modificarPelicula(Long idPelicula, String titulo, Integer anioEstreno, Long idPais, Integer duracion, String sinopsis) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
 
+	    String insertPelicula = "UPDATE pelicula SET titulo = ?, anio_estreno = ?, id_pais = ?, duracion = ?, sinopsis = ? WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(insertPelicula); 
+	    ps.setString(1, titulo);
+	    ps.setInt(2, anioEstreno);
+	    ps.setLong(3, idPais);
+	    ps.setInt(4, duracion);
+	    ps.setString(5, sinopsis);
+	    ps.setLong(6, idPelicula);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar la película.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPais);
+	    ps2.setLong(1, idPais);
+	    ResultSet rs = ps2.executeQuery();
+	    String continente = null;
+	    String nombre = null;
+	    if (rs.next()) {
+	        continente = rs.getString("continente");
+	        nombre = rs.getString("nombre");
+	    } else {
+	        throw new SQLException("El país seleccionado no existe en el sistema.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+
+	    rs.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
+	}
+	
+	public void eliminarPelicula(Long id) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deletePelicula = "DELETE FROM pelicula WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(deletePelicula);
+	    ps.setLong(1, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido eliminar la película");
+	    }
+
+	    ps.close();
+	    conn.close();
+	}
+
+
+	public Participante crearParticipante(String nombre, Long idPais, Date fechaNacimiento) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertParticipante = "INSERT INTO participante (nombre, id_pais, fecha_nacimiento) VALUES(?,?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertParticipante, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, nombre);
+	    ps.setLong(2, idPais);
+	    ps.setDate(3, fechaNacimiento);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el participante.");
+	    }
+
+	    ResultSet generatedKeys = ps.getGeneratedKeys();
+	    Long idParticipante = null;
+	    if (generatedKeys.next()) {
+	        idParticipante = generatedKeys.getLong(1);
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID del participante insertado.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPais);
+	    ps2.setLong(1, idPais);
+	    ResultSet rs = ps2.executeQuery();
+	    String continente = null;
+	    String nombrePais = null;
+	    if (rs.next()) {
+	        continente = rs.getString("continente");
+	        nombrePais = rs.getString("nombre");
+	    } else {
+	        throw new SQLException("El país seleccionado no existe en el sistema.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombrePais);
+
+	    rs.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Participante(idParticipante, nombre, pais, fechaNacimiento);
+	}
+	
+	public Participante modificarParticipante(Long id, String nombre, Long idPais, Date fechaNacimiento) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String modificarParticipante = "UPDATE participante nombre = ?, id_pais = ?, fecha_nacimiento = ? WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(modificarParticipante);
+	    ps.setString(1, nombre);
+	    ps.setLong(2, idPais);
+	    ps.setDate(3, fechaNacimiento);
+	    ps.setLong(4, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el participante.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPais);
+	    ps2.setLong(1, idPais);
+	    ResultSet rs = ps2.executeQuery();
+	    String continente = null;
+	    String nombrePais = null;
+	    if (rs.next()) {
+	        continente = rs.getString("continente");
+	        nombrePais = rs.getString("nombre");
+	    } else {
+	        throw new SQLException("El país seleccionado no existe en el sistema.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombrePais);
+
+	    rs.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Participante(id, nombre, pais, fechaNacimiento);
+	}
+	
+	public void eliminarParticipante(Long id) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deleteParticipante = "DELETE FROM participante WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(deleteParticipante);
+	    ps.setLong(1, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido eliminar el participante");
+	    }
+
+	    ps.close();
+	    conn.close();
+	}
+
+	public Valoracion crearValoracion(Long idPelicula, Float nota, Boolean recomendada, String critica) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertValoracion = "INSERT INTO valoracion (id_pelicula, nota, recomendada, critica) VALUES(?,?,?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertValoracion);
+	    ps.setLong(1, idPelicula);
+	    ps.setFloat(2, nota);
+	    ps.setBoolean(3, recomendada);
+	    ps.setString(4, critica);
+	    
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar la valoración.");
+	    }
+
+	    String selectPelicula = "SELECT titulo, anio_estreno, id_pais, duracion, sinopsis FROM pelicula WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPelicula);
+	    ps2.setLong(1, idPelicula);
+	    ResultSet rs = ps2.executeQuery();
+
+	    String titulo;
+	    Integer anioEstreno;
+	    Long idPais;
+	    Integer duracion;
+	    String sinopsis;
+
+	    if (rs.next()) {
+	        titulo = rs.getString("titulo");
+	        anioEstreno = rs.getInt("anio_estreno");
+	        idPais = rs.getLong("id_pais");
+	        duracion = rs.getInt("duracion");
+	        sinopsis = rs.getString("sinopsis");
+	    } else {
+	        rs.close();
+	        ps2.close();
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("La película seleccionada no existe.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps3 = conn.prepareStatement(selectPais);
+	    ps3.setLong(1, idPais);
+	    ResultSet rs2 = ps3.executeQuery();
+	    rs2.next();
+
+	    String continente = rs2.getString("continente");
+	    String nombre = rs2.getString("nombre");
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+	    Pelicula pelicula = new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
+
+	    rs2.close();
+	    rs.close();
+	    ps3.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Valoracion(pelicula, nota, recomendada, critica);
+	}
+	
+	public Vista crearVista(Long idPelicula, Date fecha) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertVista = "INSERT INTO vista (id_pelicula, fecha) VALUES(?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertVista, Statement.RETURN_GENERATED_KEYS);
+	    ps.setLong(1, idPelicula);
+	    ps.setDate(2, fecha);
+	    
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar la vista.");
+	    }
+	    
+	    ResultSet generatedKeys = ps.getGeneratedKeys();
+	    Long idVista = null;
+	    if (generatedKeys.next()) {
+	        idVista = generatedKeys.getLong(1);
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID de la vista insertada.");
+	    }
+
+	    String selectPelicula = "SELECT titulo, anio_estreno, id_pais, duracion, sinopsis FROM pelicula WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPelicula);
+	    ps2.setLong(1, idPelicula);
+	    ResultSet rs = ps2.executeQuery();
+
+	    String titulo;
+	    Integer anioEstreno;
+	    Long idPais;
+	    Integer duracion;
+	    String sinopsis;
+
+	    if (rs.next()) {
+	        titulo = rs.getString("titulo");
+	        anioEstreno = rs.getInt("anio_estreno");
+	        idPais = rs.getLong("id_pais");
+	        duracion = rs.getInt("duracion");
+	        sinopsis = rs.getString("sinopsis");
+	    } else {
+	        rs.close();
+	        ps2.close();
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("La película seleccionada no existe.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps3 = conn.prepareStatement(selectPais);
+	    ps3.setLong(1, idPais);
+	    ResultSet rs2 = ps3.executeQuery();
+	    rs2.next();
+
+	    String continente = rs2.getString("continente");
+	    String nombre = rs2.getString("nombre");
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+	    Pelicula pelicula = new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
+
+	    rs2.close();
+	    rs.close();
+	    ps3.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Vista(idVista, pelicula, fecha);
+	}
+	
+	public void eliminarVista(Long id) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deleteVista = "DELETE FROM vista WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(deleteVista);
+	    ps.setLong(1, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido eliminar la vista");
+	    }
+
+	    ps.close();
+	    conn.close();
+	}
+
+	public Valoracion modificarValoracion(Long idPelicula, Float nota, Boolean recomendada, String critica) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String updateValoracion = "UPDATE valoracion SET nota = ?, recomendada = ?, critica = ? WHERE id_pelicula = ?";
+	    PreparedStatement ps = conn.prepareStatement(updateValoracion);
+	    ps.setFloat(1, nota);
+	    ps.setBoolean(2, recomendada);
+	    ps.setString(3, critica);
+	    ps.setLong(4, idPelicula);
+	    
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido modificar la valoración.");
+	    }
+
+	    String selectPelicula = "SELECT titulo, anio_estreno, id_pais, duracion, sinopsis FROM pelicula WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPelicula);
+	    ps2.setLong(1, idPelicula);
+	    ResultSet rs = ps2.executeQuery();
+
+	    String titulo;
+	    Integer anioEstreno;
+	    Long idPais;
+	    Integer duracion;
+	    String sinopsis;
+
+	    if (rs.next()) {
+	        titulo = rs.getString("titulo");
+	        anioEstreno = rs.getInt("anio_estreno");
+	        idPais = rs.getLong("id_pais");
+	        duracion = rs.getInt("duracion");
+	        sinopsis = rs.getString("sinopsis");
+	    } else {
+	        rs.close();
+	        ps2.close();
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("La película seleccionada no existe.");
+	    }
+
+	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps3 = conn.prepareStatement(selectPais);
+	    ps3.setLong(1, idPais);
+	    ResultSet rs2 = ps3.executeQuery();
+	    rs2.next();
+
+	    String continente = rs2.getString("continente");
+	    String nombre = rs2.getString("nombre");
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+	    Pelicula pelicula = new Pelicula(idPelicula, titulo, anioEstreno, pais, duracion, sinopsis);
+
+	    rs2.close();
+	    rs.close();
+	    ps3.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+
+	    return new Valoracion(pelicula, nota, recomendada, critica);
+	}
+	
+	
+	
 
 
 //	public List<Autor> buscarAutores(String nombreBusqueda) throws SQLException {
