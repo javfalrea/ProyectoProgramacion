@@ -132,6 +132,17 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/anadir_participante")
+	public ResponseEntity<?> anadirParticipante(@RequestParam Long idPelicula,
+			@RequestParam Long idParticipante,
+			@RequestParam Boolean esActor,
+			@RequestParam Boolean esDirector){
+		try {
+			return ResponseEntity.ok().body(servicio.anadirParticipante(idPelicula, idParticipante, esActor, esDirector));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
 	
 	
 	

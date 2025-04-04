@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.daw.datamodel.entities.Pais;
 import com.daw.datamodel.entities.Participante;
 import com.daw.datamodel.entities.Pelicula;
+import com.daw.datamodel.entities.PeliculaParticipante;
 import com.daw.datamodel.entities.Valoracion;
 import com.daw.datamodel.entities.Vista;
 
@@ -442,6 +443,102 @@ public class Servicio {
 	    conn.close();
 
 	    return new Valoracion(pelicula, nota, recomendada, critica);
+	}
+	
+	public PeliculaParticipante anadirParticipante(Long idPelicula, Long idParticipante, Boolean esActor, Boolean esDirector) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insert = "INSERT INTO pelicula_participante (id_pelicula, id_participante, es_actor, es_director) VALUES(?,?,?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insert);
+	    ps.setLong(1, idPelicula);
+	    ps.setLong(2, idParticipante);
+	    ps.setBoolean(3, esActor);
+	    ps.setBoolean(4, esDirector);
+
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el participante a la película.");
+	    }
+
+	    String selectPelicula = "SELECT titulo, anio_estreno, id_pais, duracion, sinopsis FROM pelicula WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPelicula);
+	    ps2.setLong(1, idPelicula);
+	    ResultSet rs = ps2.executeQuery();
+	    String titulo = null;
+	    Integer anioEstreno = null;
+	    Long idPaisPeli = null;
+	    Integer duracion = null;
+	    String sinopsis = null;
+	    if(rs.next()) {
+	    	titulo = rs.getString("titulo");
+	    	anioEstreno = rs.getInt("anio_estreno");
+	    	idPaisPeli = rs.getLong("id_pais");
+	    	duracion = rs.getInt("duracion");
+	    	sinopsis = rs.getString("sinopsis");
+	    } else {
+	    	throw new SQLException("La película seleccionada no existe en el sistema");
+	    }
+	    
+	    String selectPaisPeli = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps3 = conn.prepareStatement(selectPaisPeli);
+	    ps3.setLong(1, idPaisPeli);
+	    ResultSet rs2 = ps3.executeQuery();
+	    String continentePeli = null;
+	    String nombrePaisPeli = null;
+	    if(rs2.next()) {
+		    continentePeli = rs2.getString("continente");
+	        nombrePaisPeli = rs2.getString("nombre");
+	    }
+	
+	    Pais paisPeli = new Pais(idPaisPeli, continentePeli, nombrePaisPeli);
+	    
+	    Pelicula pelicula = new Pelicula(idPelicula, titulo, anioEstreno, paisPeli, duracion, sinopsis);
+	    
+	    String selectParticipante = "SELECT nombre, id_pais, fecha_nacimiento FROM participante WHERE id = ?";
+	    PreparedStatement ps4 = conn.prepareStatement(selectParticipante);
+	    ps4.setLong(1, idParticipante);
+	    ResultSet rs3 = ps4.executeQuery();
+	    String nombre = null;
+	    Long idPaisParticipante = null;
+	    Date fechaNacimiento = null;
+	    if(rs3.next()) {
+	    	nombre = rs3.getString("nombre");
+	    	idPaisParticipante = rs3.getLong("id_pais");
+	    	fechaNacimiento = rs3.getDate("fecha_nacimiento");
+	    } else {
+	    	throw new SQLException("El participante seleccionado no existe en el sistema.");
+	    }
+	    
+	    String selectPaisParticipante = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps5 = conn.prepareStatement(selectPaisParticipante);
+	    ps5.setLong(1, idPaisParticipante);
+	    ResultSet rs4 = ps5.executeQuery();
+	    String continenteParticipante = null;
+	    String nombrePaisParticipante = null;
+	    if(rs4.next()) {
+		    continenteParticipante = rs4.getString("continente");
+	        nombrePaisParticipante = rs4.getString("nombre");
+	    }
+	
+	    Pais paisParticipante = new Pais(idPaisParticipante, continenteParticipante, nombrePaisParticipante);
+	    
+	    Participante participante = new Participante(idParticipante, nombre, paisParticipante, fechaNacimiento);
+	    
+	    rs4.close();
+	    rs3.close();
+	    rs2.close();
+	    rs.close();
+	    ps5.close();
+	    ps4.close();
+	    ps3.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+	    
+	    return new PeliculaParticipante(pelicula, participante, esActor, esDirector);
+
+	    
 	}
 	
 	
