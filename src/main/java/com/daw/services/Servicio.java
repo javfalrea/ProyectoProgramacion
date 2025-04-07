@@ -7,12 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.daw.datamodel.entities.Genero;
 import com.daw.datamodel.entities.Pais;
 import com.daw.datamodel.entities.Participante;
 import com.daw.datamodel.entities.Pelicula;
+import com.daw.datamodel.entities.PeliculaGenero;
 import com.daw.datamodel.entities.PeliculaParticipante;
 import com.daw.datamodel.entities.Valoracion;
 import com.daw.datamodel.entities.Vista;
@@ -182,7 +186,7 @@ public class Servicio {
 	public Participante modificarParticipante(Long id, String nombre, Long idPais, Date fechaNacimiento) throws SQLException {
 	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
 
-	    String modificarParticipante = "UPDATE participante nombre = ?, id_pais = ?, fecha_nacimiento = ? WHERE id = ?";
+	    String modificarParticipante = "UPDATE participante SET nombre = ?, id_pais = ?, fecha_nacimiento = ? WHERE id = ?";
 	    PreparedStatement ps = conn.prepareStatement(modificarParticipante);
 	    ps.setString(1, nombre);
 	    ps.setLong(2, idPais);
@@ -537,11 +541,126 @@ public class Servicio {
 	    conn.close();
 	    
 	    return new PeliculaParticipante(pelicula, participante, esActor, esDirector);
-
 	    
 	}
 	
+	public PeliculaGenero anadirGenero(Long idPelicula, Long idGenero) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insert = "INSERT INTO pelicula_genero (id_pelicula, id_genero) VALUES(?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insert);
+	    ps.setLong(1, idPelicula);
+	    ps.setLong(2, idGenero);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el género a la película.");
+	    }
+
+	    String selectPelicula = "SELECT titulo, anio_estreno, id_pais, duracion, sinopsis FROM pelicula WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPelicula);
+	    ps2.setLong(1, idPelicula);
+	    ResultSet rs = ps2.executeQuery();
+	    String titulo = null;
+	    Integer anioEstreno = null;
+	    Long idPaisPeli = null;
+	    Integer duracion = null;
+	    String sinopsis = null;
+	    if(rs.next()) {
+	    	titulo = rs.getString("titulo");
+	    	anioEstreno = rs.getInt("anio_estreno");
+	    	idPaisPeli = rs.getLong("id_pais");
+	    	duracion = rs.getInt("duracion");
+	    	sinopsis = rs.getString("sinopsis");
+	    } else {
+	    	throw new SQLException("La película seleccionada no existe en el sistema");
+	    }
+	    
+	    String selectPaisPeli = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps3 = conn.prepareStatement(selectPaisPeli);
+	    ps3.setLong(1, idPaisPeli);
+	    ResultSet rs2 = ps3.executeQuery();
+	    String continentePeli = null;
+	    String nombrePaisPeli = null;
+	    if(rs2.next()) {
+		    continentePeli = rs2.getString("continente");
+	        nombrePaisPeli = rs2.getString("nombre");
+	    }
 	
+	    Pais paisPeli = new Pais(idPaisPeli, continentePeli, nombrePaisPeli);
+	    
+	    Pelicula pelicula = new Pelicula(idPelicula, titulo, anioEstreno, paisPeli, duracion, sinopsis);
+	    
+	    String selectGenero = "SELECT nombre, codigo FROM genero WHERE id = ?";
+	    PreparedStatement ps4 = conn.prepareStatement(selectGenero);
+	    ps4.setLong(1, idGenero);
+	    ResultSet rs3 = ps4.executeQuery();
+	    String nombre = null;
+	    Long codigo = null;
+	    if(rs3.next()) {
+	    	nombre = rs3.getString("nombre");
+	    	codigo = rs3.getLong("codigo");
+	    } else {
+	    	throw new SQLException("El participante seleccionado no existe en el sistema.");
+	    }
+	    	 
+	    Genero genero = new Genero(idGenero, codigo, nombre);
+	    
+	    rs3.close();
+	    rs2.close();
+	    rs.close();
+	    ps4.close();
+	    ps3.close();
+	    ps2.close();
+	    ps.close();
+	    conn.close();
+	    
+	    return new PeliculaGenero(pelicula, genero);
+	    
+	}
+	
+	public List<Pelicula> buscarPeliculas(String tituloBq, String participanteBq, Long idPaisBq, Long idGeneroBq) throws SQLException {
+	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
+	String selectPelicula = "SELECT * FROM pelicula p JOIN pelicula_participante pp ON p.id = pp.id_pelicula JOIN participante pt ON pp.id_participante = pt.id JOIN pelicula_genero pg ON p.id = pg.id_pelicula JOIN genero g ON pg.id_genero = g.id WHERE LOWER(p.titulo) LIKE LOWER(?) AND LOWER(pt.nombre) LIKE LOWER(?) AND p.id_pais = ? AND g.id = ?";
+	PreparedStatement ps = conn.prepareStatement(selectPelicula);
+	ps.setString(1, "%" + tituloBq + "%");
+	ps.setString(2, "%" + participanteBq + "%");
+	ps.setLong(3, idPaisBq);
+	ps.setLong(4, idGeneroBq);
+	ResultSet rs = ps.executeQuery();
+	List<Pelicula> peliculas = new ArrayList<Pelicula>();
+	while (rs.next()) {
+		Long id = rs.getLong("id");
+		String titulo = rs.getString("titulo");
+		Integer anioEstreno = rs.getInt("anio_estreno");
+		Long idPais = rs.getLong("id_pais");
+		Integer duracion = rs.getInt("duracion");
+		String sinopsis = rs.getString("sinopsis");
+		
+		String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
+	    PreparedStatement ps2 = conn.prepareStatement(selectPais);
+	    ps2.setLong(1, idPais);
+	    ResultSet rs2 = ps2.executeQuery();
+	    rs2.next();
+	    
+	    String continente = rs2.getString("continente");
+	    String nombre = rs2.getString("nombre");
+	    
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+	    		
+		Pelicula pelicula = new Pelicula(id, titulo, anioEstreno, pais, duracion, sinopsis);
+		peliculas.add(pelicula);
+		
+		ps2.close();
+		rs2.close();
+	}
+	
+	ps.close();
+	rs.close();
+	conn.close();
+	return peliculas;
+}
 	
 
 

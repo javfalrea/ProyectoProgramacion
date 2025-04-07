@@ -144,7 +144,28 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/anadir_genero")
+	public ResponseEntity<?> anadirGenero(@RequestParam Long idPelicula,
+			@RequestParam Long idGenero){
+		try {
+			return ResponseEntity.ok().body(servicio.anadirGenero(idPelicula, idGenero));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
 	
+	@GetMapping("/buscar_peliculas")
+	public ResponseEntity<?> buscarPeliculas(@RequestParam String titulo,
+			@RequestParam String participante,
+			@RequestParam(required = false) Long idPais,
+			@RequestParam(required = false) Long idGenero
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarPeliculas(titulo, participante, idPais, idGenero));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
 	
 //
 //	
