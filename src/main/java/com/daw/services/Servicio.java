@@ -676,7 +676,7 @@ public class Servicio {
 		List<Participante> participantes = new ArrayList<Participante>();
 		while (rs.next()) {
 			Long id = rs.getLong("id");
-			String nombre = rs.getString("titulo");
+			String nombre = rs.getString("nombre");
 			Long idPais = rs.getLong("id_pais");
 			Date fechaNacimiento = rs.getDate("fecha_nacimiento");
 			
@@ -715,7 +715,7 @@ public class Servicio {
 		List<Participante> participantes = new ArrayList<Participante>();
 		while (rs.next()) {
 			Long id = rs.getLong("id");
-			String nombre = rs.getString("titulo");
+			String nombre = rs.getString("nombre");
 			Long idPais = rs.getLong("id_pais");
 			Date fechaNacimiento = rs.getDate("fecha_nacimiento");
 			
@@ -744,8 +744,6 @@ public class Servicio {
 		return participantes;
 	}
 	
-	
-
 
 //	public List<Autor> buscarAutores(String nombreBusqueda) throws SQLException {
 //		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/base_datos_biblioteca", "usuario","usuario");
