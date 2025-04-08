@@ -167,6 +167,26 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/buscar_actor")
+	public ResponseEntity<?> buscarActor(@RequestParam(required = false) String nombre
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarActor(nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/buscar_director")
+	public ResponseEntity<?> buscarDirector(@RequestParam(required = false) String nombre
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarDirector(nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
 //
 //	
 //	@GetMapping("/consulta_libros")
