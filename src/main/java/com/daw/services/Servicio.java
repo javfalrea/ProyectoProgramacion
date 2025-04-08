@@ -621,12 +621,16 @@ public class Servicio {
 	
 	public List<Pelicula> buscarPeliculas(String tituloBq, String participanteBq, Long idPaisBq, Long idGeneroBq) throws SQLException {
 	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
-	String selectPelicula = "SELECT * FROM pelicula p JOIN pelicula_participante pp ON p.id = pp.id_pelicula JOIN participante pt ON pp.id_participante = pt.id JOIN pelicula_genero pg ON p.id = pg.id_pelicula JOIN genero g ON pg.id_genero = g.id WHERE LOWER(p.titulo) LIKE LOWER(?) AND LOWER(pt.nombre) LIKE LOWER(?) AND p.id_pais = ? AND g.id = ?";
+	String selectPelicula = "SELECT DISTINCT p.* FROM pelicula p LEFT JOIN pelicula_participante pp ON p.id = pp.id_pelicula LEFT JOIN participante pt ON pp.id_participante = pt.id LEFT JOIN pelicula_genero pg ON p.id = pg.id_pelicula LEFT JOIN genero g ON pg.id_genero = g.id WHERE (? IS NULL OR LOWER(p.titulo) LIKE LOWER(?)) AND (? IS NULL OR LOWER(pt.nombre) LIKE LOWER(?)) AND (? IS NULL OR p.id_pais = ?) AND (? IS NULL OR g.id = ?)";	
 	PreparedStatement ps = conn.prepareStatement(selectPelicula);
-	ps.setString(1, "%" + tituloBq + "%");
-	ps.setString(2, "%" + participanteBq + "%");
-	ps.setLong(3, idPaisBq);
-	ps.setLong(4, idGeneroBq);
+	ps.setString(1, tituloBq);
+	ps.setString(2, "%" + tituloBq + "%");
+	ps.setString(3, participanteBq);
+	ps.setString(4, "%" + participanteBq + "%");
+	ps.setObject(5, idPaisBq);
+	ps.setObject(6, idPaisBq);
+	ps.setObject(7, idGeneroBq);
+	ps.setObject(8, idGeneroBq);
 	ResultSet rs = ps.executeQuery();
 	List<Pelicula> peliculas = new ArrayList<Pelicula>();
 	while (rs.next()) {
