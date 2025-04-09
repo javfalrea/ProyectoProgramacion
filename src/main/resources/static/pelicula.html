@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas</title>
+    <link rel="stylesheet" href="tablas.css">
+</head>
+<body>
+
+    <h1>Películas</h1>
+
+    <div class="filters">
+        <input type="text" id="tituloFiltro" placeholder="Película">
+        <input type="text" id="participanteFiltro" placeholder="Participante">
+        <select id="paisFiltro">
+            <option value="">Seleccionar país</option>
+            <!-- Aquí se llenarán los países desde el backend -->
+        </select>
+        <select id="generoFiltro">
+            <option value="">Seleccionar género</option>
+            <!-- Aquí se llenarán los géneros desde el backend -->
+        </select>
+        <button id="buscarPelicula">Buscar</button>
+        <button id="insertarPelicula">Insertar Película</button>
+    </div>
+
+    <table id="tablaPeliculas">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Año de estreno</th>
+                <th>País</th>
+                <th>Duración</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se mostrarán los resultados de las películas -->
+        </tbody>
+    </table>
+
+    <!-- Modal para insertar película -->
+    <div id="modalInsertarPelicula" class="modal">
+        <div class="modal-content">
+            <span class="close" id="cerrarModal">&times;</span>
+            <h2>Insertar Nueva Película</h2>
+            <form id="formInsertarPelicula">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" required><br><br>
+
+                <label for="anioEstreno">Año de estreno</label>
+                <input type="number" id="anioEstreno" required><br><br>
+
+                <label for="pais">País</label>
+                <select id="pais" required>
+                    <!-- Aquí se llenarán los países desde el backend -->
+                </select><br><br>
+
+                <label for="duracion">Duración</label>
+                <input type="number" id="duracion" required><br><br>
+
+                <label for="sinopsis">Sinopsis:</label><br>
+                <textarea id="sinopsis" required></textarea><br><br>
+
+                <button type="submit">Aceptar</button>
+                <button type="button" id="cancelarModal">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/pelicula.js"></script>
+</body>
+</html>
+
+
+
