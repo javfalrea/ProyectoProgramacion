@@ -882,4 +882,50 @@ public class Servicio {
 	    conn.close();
 	}
 	
+	public List<Pais> nombrePaises() throws SQLException {
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
+		String selectPaises = "SELECT * FROM pais";
+		PreparedStatement ps = conn.prepareStatement(selectPaises);
+		ResultSet rs = ps.executeQuery();
+		List<Pais> paises = new ArrayList<Pais>();
+		while (rs.next()) {
+			Long id = rs.getLong("id");
+			String nombre = rs.getString("nombre");
+			String continente = rs.getString("continente");
+	
+		    Pais pais = new Pais(id, continente, nombre);
+		    
+		    paises.add(pais);
+		}
+		
+		ps.close();
+		rs.close();
+		conn.close();
+		return paises;
+	}
+	
+	public List<Genero> nombreGeneros() throws SQLException {
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
+		String selectGeneros = "SELECT * FROM genero";
+		PreparedStatement ps = conn.prepareStatement(selectGeneros);
+		ResultSet rs = ps.executeQuery();
+		List<Genero> generos = new ArrayList<Genero>();
+		while (rs.next()) {
+			Long id = rs.getLong("id");
+			Long codigo = rs.getLong("codigo");
+			String nombre = rs.getString("nombre");
+	
+		    Genero genero = new Genero(id, codigo, nombre);
+		    
+		    generos.add(genero);
+		}
+		
+		ps.close();
+		rs.close();
+		conn.close();
+		return generos;
+	}
+	
+	
+	
 }

@@ -49,7 +49,7 @@
             border: solid 1px black;
         }
 
-        .contenedor_autores {
+        .contenedor_peliculas {
             height: 100%;
             width: 100%;
             display: flex;
@@ -140,7 +140,7 @@
 <body class="body_class" onLoad="cargaInicial()">
 
     <div id="header" class="header">
-        <h1>GESTIÓN DE AUTORES</h1>
+        <h1>GESTIÓN DE PELÍCULAS</h1>
     </div>
     <div id="peliculas" class="contenedor_peliculas">
 
@@ -154,22 +154,21 @@
 			<label for="genero">Género</label>
 			<input type="text" name="genero" id="genero" />
 			
-            <button id="buscar_autores" onclick="buscarAutores()">Buscar</button>
-            <button id="boton_crear_autor" onclick="abrirCrearAutor()">Crear Autor</button>
-			<button id="boton_crear_libro" onclick="abrirCrearLibro()">Crear Libro</button>
+            <button id="buscar_autores" onclick="buscarPeliculas()">Buscar</button>
+            <button id="boton_crear_autor" onclick="abrirCrearPelicula()">Crear Película</button>
         </div>
     
         <div id="contenedor_tabla" class="contenedor_tabla">
     
-            <table class="tabla_autores">
+            <table class="tabla_peliculas">
                 <thead>
                     <tr>
-                        <th>Identificador</th>
-                        <th>Nombre</th>
-                        <th>Fecha Nacimiento</th>
-                        <th>Dirección</th>
-                        <th>DNI</th>
-						<th>Acciones</th>
+                        <th>Id</th>
+                        <th>Título</th>
+                        <th>Año de estreno</th>
+                        <th>País</th>
+                        <th>Duración</th>
+						<th>Sinopsis</th>
                     </tr>
                 </thead>
                 <tbody id="contenido_tabla">
@@ -178,24 +177,35 @@
     
         </div>
     
-        <div id="ventanaModal" class="modal">
-            <div class="contenido-modal">
-                <h2 style="text-align: center;">Crear Autor</h2>
-                <label for="nombre_completo">Nombre y Apellidos</label>
-                <input type="text" name="nombre_completo" id="nombre_completo">
-                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                <input type="date" name="fechaNacimiento" id="fechaNacimiento">
-                <label for="direccion">Dirección</label>
-                <input type="text" name="direccion" id="direccion">
-                <label for="dni">DNI</label>
-                <input type="text" name="dni" id="dni">
-                <div style="display: flex; justify-content: space-around;">
-                    <button onclick="gestionarAutor()">Aceptar</button>
-                    <button onclick="cerrarCrearAutor()">Cancelar</button>                    
-                </div>
-				<input type="hidden" id="idAutor">
-    
-            </div>
+		<div id="ventanaModalPelicula" class="modal">
+		  <div class="contenido-modal">
+		    <h2 style="text-align: center;">Crear Pelicula</h2>
+		    
+		    <label for="titulo">Título</label>
+		    <input type="text" name="titulo" id="titulo">
+		    
+		    <label for="anio_estreno">Año de estreno</label>
+		    <input type="number" name="anio_estreno" id="anio_estreno">
+		    
+		    <label for="pais">País</label>
+		    <select name="pais" id="pais">
+		      <option value="">Seleccione un país</option>
+		      <!-- Opciones de países se cargarán dinámicamente -->
+		    </select>
+		    
+		    <label for="duracion">Duración</label>
+		    <input type="number" name="duracion" id="duracion">
+		    
+			<label for="sinopsis">Sinopsis</label>
+			<textarea name="sinopsis" id="sinopsis" rows="6"></textarea>
+		    
+		    <div style="display: flex; justify-content: space-around;">
+		      <button onclick="gestionarPelicula()">Aceptar</button>
+		      <button onclick="cerrarCrearPelicula()">Cancelar</button>
+		    </div>
+		    
+		    <input type="hidden" id="idPelicula">
+		  </div>
 		</div>
 			
 		<div id="ventanaModal2" class="modal">

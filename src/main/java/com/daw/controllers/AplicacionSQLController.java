@@ -210,11 +210,22 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	
+	
 	@GetMapping("/eliminar_pais")
 	public ResponseEntity<?> eliminarPais(@RequestParam Long id){
 		try {
 			servicio.eliminarPais(id);
 			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/nombre_paises")
+	public ResponseEntity<?> nombrePaises(){
+		try {
+			return ResponseEntity.ok().body(servicio.nombrePaises());
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
@@ -248,6 +259,15 @@ public class AplicacionSQLController {
 		try {
 			servicio.eliminarGenero(id);
 			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/nombre_generos")
+	public ResponseEntity<?> nombreGeneros(){
+		try {
+			return ResponseEntity.ok().body(servicio.nombreGeneros());
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
