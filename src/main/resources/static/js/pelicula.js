@@ -31,10 +31,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.getElementById("buscarPelicula").addEventListener("click", function() {
     // Recoger los valores de los filtros
-    const titulo = document.getElementById("tituloFiltro").value.trim() || "";
-    const participante = document.getElementById("participanteFiltro").value.trim() || "";
-    const idPais = document.getElementById("paisFiltro").value || null;
-    const idGenero = document.getElementById("generoFiltro").value || null;
+    const titulo = document.getElementById("tituloFiltro").value.trim();
+    const participante = document.getElementById("participanteFiltro").value.trim();
+    const idPais = document.getElementById("paisFiltro").value;
+    const idGenero = document.getElementById("generoFiltro").value;
 
     // Crear la URL con los filtros
     let url = "/buscar_peliculas?tituloBq=" + titulo + "&participanteBq=" + participante + "&idPaisBq=" + idPais + "&idGeneroBq=" + idGenero;
