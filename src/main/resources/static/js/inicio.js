@@ -125,7 +125,7 @@ function cargaInicial() {
 	let elementoSelect = document.getElementById("editorial");
 	let elementoSelect2 = document.getElementById("categoria");
 	
-	fetch("buscar_editoriales")
+	fetch("buscar_peliculas")
 	.then(res => res.text())
 	.then(json => {
 		const posts = JSON.parse(json);

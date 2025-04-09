@@ -187,4 +187,70 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/crear_pais")
+	public ResponseEntity<?> crearPais(@RequestParam String continente,
+			@RequestParam String nombre			
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.crearPais(continente, nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/modificar_pais")
+	public ResponseEntity<?> modificarPais(@RequestParam Long id,
+			@RequestParam String continente,
+			@RequestParam String nombre			
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.modificarPais(id, continente, nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/eliminar_pais")
+	public ResponseEntity<?> eliminarPais(@RequestParam Long id){
+		try {
+			servicio.eliminarPais(id);
+			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/crear_genero")
+	public ResponseEntity<?> crearGenero(@RequestParam Long codigo,
+			@RequestParam String nombre			
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.crearGenero(codigo, nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/modificar_genero")
+	public ResponseEntity<?> modificarGenero(@RequestParam Long id,
+			@RequestParam Long codigo,
+			@RequestParam String nombre			
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.modificarGenero(id, codigo, nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/eliminar_genero")
+	public ResponseEntity<?> eliminarGenero(@RequestParam Long id){
+		try {
+			servicio.eliminarGenero(id);
+			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
 }

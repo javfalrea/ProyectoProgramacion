@@ -82,8 +82,8 @@ public class Servicio {
 	public Pelicula modificarPelicula(Long idPelicula, String titulo, Integer anioEstreno, Long idPais, Integer duracion, String sinopsis) throws SQLException {
 	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
 
-	    String insertPelicula = "UPDATE pelicula SET titulo = ?, anio_estreno = ?, id_pais = ?, duracion = ?, sinopsis = ? WHERE id = ?";
-	    PreparedStatement ps = conn.prepareStatement(insertPelicula); 
+	    String modPelicula = "UPDATE pelicula SET titulo = ?, anio_estreno = ?, id_pais = ?, duracion = ?, sinopsis = ? WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(modPelicula); 
 	    ps.setString(1, titulo);
 	    ps.setInt(2, anioEstreno);
 	    ps.setLong(3, idPais);
@@ -93,7 +93,7 @@ public class Servicio {
 
 	    int respuesta = ps.executeUpdate();
 	    if (respuesta != 1) {
-	        throw new SQLException("No se ha podido insertar la película.");
+	        throw new SQLException("No se ha podido modificar la película.");
 	    }
 
 	    String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
@@ -742,6 +742,144 @@ public class Servicio {
 		rs.close();
 		conn.close();
 		return participantes;
+	}
+	
+	public Pais crearPais(String continente, String nombre) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertPais = "INSERT INTO pais (continente, nombre) VALUES(?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertPais, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, continente);
+	    ps.setString(2, nombre);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el país.");
+	    }
+
+	    ResultSet generatedKeys = ps.getGeneratedKeys();
+	    Long idPais = null;
+	    if (generatedKeys.next()) {
+	        idPais = generatedKeys.getLong(1);
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID del país insertado.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+
+	    ps.close();
+	    conn.close();
+
+	    return pais;
+	}
+	
+	public Pais modificarPais(Long idPais, String continente, String nombre) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String modPais = "UPDATE pais SET continente = ?, nombre = ? WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(modPais); 
+	    ps.setString(1, continente);
+	    ps.setString(2, nombre);
+	    ps.setLong(3, idPais);
+	    
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido modificar el país.");
+	    }
+
+	    Pais pais = new Pais(idPais, continente, nombre);
+
+	    ps.close();
+	    conn.close();
+
+	    return pais;
+	}
+	
+	public void eliminarPais(Long id) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deletePais = "DELETE FROM pais WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(deletePais);
+	    ps.setLong(1, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido eliminar el país.");
+	    }
+
+	    ps.close();
+	    conn.close();
+	}
+	
+	public Genero crearGenero(Long codigo, String nombre) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String insertPais = "INSERT INTO genero (continente, nombre) VALUES(?,?)";
+	    PreparedStatement ps = conn.prepareStatement(insertPais, Statement.RETURN_GENERATED_KEYS);
+	    ps.setLong(1, codigo);
+	    ps.setString(2, nombre);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido insertar el género.");
+	    }
+
+	    ResultSet generatedKeys = ps.getGeneratedKeys();
+	    Long idGenero = null;
+	    if (generatedKeys.next()) {
+	    	idGenero = generatedKeys.getLong(1);
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID del género insertado.");
+	    }
+
+	    Genero genero = new Genero(idGenero, codigo, nombre);
+
+	    ps.close();
+	    conn.close();
+
+	    return genero;
+	}
+	
+	public Genero modificarGenero(Long idGenero, Long codigo, String nombre) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String modPais = "UPDATE genero SET codigo = ?, nombre = ? WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(modPais); 
+	    ps.setLong(1, codigo);
+	    ps.setString(2, nombre);
+	    ps.setLong(3, idGenero);
+	    
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        throw new SQLException("No se ha podido modificar el género.");
+	    }
+
+	    Genero genero = new Genero(idGenero, codigo, nombre);
+
+	    ps.close();
+	    conn.close();
+
+	    return genero;
+	}
+	
+	public void eliminarGenero(Long id) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deleteGenero = "DELETE FROM genero WHERE id = ?";
+	    PreparedStatement ps = conn.prepareStatement(deleteGenero);
+	    ps.setLong(1, id);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido eliminar el género.");
+	    }
+
+	    ps.close();
+	    conn.close();
 	}
 	
 }

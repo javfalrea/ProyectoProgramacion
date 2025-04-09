@@ -9,7 +9,7 @@
 	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
 	<meta http-equiv="Pragma" content="no-cache">    
 	
-	<title>Gestion de Biblioteca</title>
+	<title>Gestion de Películas</title>
 	
     <script src="js/inicio.js"></script>
     <style>
@@ -142,11 +142,18 @@
     <div id="header" class="header">
         <h1>GESTIÓN DE AUTORES</h1>
     </div>
-    <div id="alumnos" class="contenedor_autores">
+    <div id="peliculas" class="contenedor_peliculas">
 
         <div id="contenedor_criterios" class="contenedor_criterios">
             <label for="nombre">Nombre</label>
             <input type="text" name="nombre" id="nombre" />
+			<label for="participante">Participante</label>
+			<input type="text" name="participante" id="participante" />
+			<label for="pais">País</label>
+			<input type="text" name="pais" id="pais" />
+			<label for="genero">Género</label>
+			<input type="text" name="genero" id="genero" />
+			
             <button id="buscar_autores" onclick="buscarAutores()">Buscar</button>
             <button id="boton_crear_autor" onclick="abrirCrearAutor()">Crear Autor</button>
 			<button id="boton_crear_libro" onclick="abrirCrearLibro()">Crear Libro</button>
