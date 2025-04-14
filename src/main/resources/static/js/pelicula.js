@@ -1,67 +1,143 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Cargar los países
-    fetch("/nombre_paises")
-        .then(response => response.json())
-        .then(paises => {
-            const paisFiltro = document.getElementById("paisFiltro");
-            paises.forEach(pais => {
-                const option = document.createElement("option");
-                option.value = pais.id;
-                option.textContent = pais.nombre;
-                paisFiltro.appendChild(option);
-            });
-        })
-        .catch(error => console.error("Error al cargar los países:", error));
+function buscarPeliculas() {
+	var titulo = document.getElementById("tituloFiltro").value.trim();
+	var participante = document.getElementById("participanteFiltro").value.trim();
+	var pais = document.getElementById("paisFiltro").value;
+	var genero = document.getElementById("generoFiltro").value;
+	
+	pais = pais === "0" ? "" : pais;
+	genero = genero === "0" ? "" : genero;
+	
+	fetch("http://localhost:9999/buscar_peliculas?titulo=" + titulo + "&participante=" + participante + "&idPais=" + pais + "&idGenero=" + genero)
+	.then(res => res.text())
+	.then(json => {
+		const posts = JSON.parse(json);
+		let tabla = "";
+		posts.forEach(fila => {
+			tabla += "<tr>";
+			tabla += "<td>" + fila.titulo + "</td>";
+			tabla += "<td>" + fila.anioEstreno + "</td>";
+			tabla += "<td>" + fila.pais.nombre + "</td>";
+			tabla += "<td>" + fila.duracion + "</td>";
+			tabla += "<td><button onclick=\"abrirModificarPelicula('" + fila.id + "','" + fila.titulo + "','" + fila.anioEstreno + "','" + fila.pais.id + "','" + fila.duracion + "','" + fila.sinopsis + "')\">Modificar</button><button onclick=\"eliminarPelicula('" + fila.id + "')\">Elimminar</button></td>";
+			tabla += "</tr>";
+		});
+		
+		
+		var contenidoTabla = document.getElementById("contenidoTabla");
+		contenidoTabla.innerHTML = tabla;
+	})
+	.catch(e => {
+		console.log('Error importando archivo: ' + e.message);
+	});
+}
 
-    // Cargar los géneros
-    fetch("/nombre_generos")
-        .then(response => response.json())
-        .then(generos => {
-            const generoFiltro = document.getElementById("generoFiltro");
-            generos.forEach(genero => {
-                const option = document.createElement("option");
-                option.value = genero.id;
-                option.textContent = genero.nombre;
-                generoFiltro.appendChild(option);
-            });
-        })
-        .catch(error => console.error("Error al cargar los géneros:", error));
-});
+function abrirCrearPelicula() {
+	var modal = document.getElementById("modalPelicula");
+	modal.style.display = "block";
+}
 
+function abrirModificarPelicula(id, titulo, anioEstreno, pais, duracion, sinopsis) {
+	document.getElementById("idPelicula").value = id;
+	document.getElementById("titulo").value = titulo;
+	document.getElementById("anioEstreno").value = anioEstreno;
+	document.getElementById("pais").value = pais;
+	document.getElementById("duracion").value = duracion;
+	document.getElementById("sinopsis").value = sinopsis;
 
-document.getElementById("buscarPelicula").addEventListener("click", function() {
-    // Recoger los valores de los filtros
-    const titulo = document.getElementById("tituloFiltro").value.trim();
-    const participante = document.getElementById("participanteFiltro").value.trim();
-    const idPais = document.getElementById("paisFiltro").value;
-    const idGenero = document.getElementById("generoFiltro").value;
+	var modal = document.getElementById("modalPelicula");
+	modal.style.display = "block";	
+}
 
-    // Crear la URL con los filtros
-    let url = "/buscar_peliculas?tituloBq=" + titulo + "&participanteBq=" + participante + "&idPaisBq=" + idPais + "&idGeneroBq=" + idGenero;
+function cerrarCrearPelicula() {
+	document.getElementById("idPelicula").value = "";
+	document.getElementById("titulo").value = "";
+	document.getElementById("anioEstreno").value = "";
+	document.getElementById("pais").selectedIndex = 0;
+	document.getElementById("duracion").value = "";
+	document.getElementById("sinopsis").value = "";
+		
+	var modal = document.getElementById("modalPelicula");
+	modal.style.display = "none";	
+}
 
-    // Hacer la solicitud GET al backend
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            // Limpiar la tabla antes de mostrar nuevos resultados
-            const tabla = document.getElementById("tablaPeliculas").getElementsByTagName('tbody')[0];
-            tabla.innerHTML = "";
+function gestionarPelicula() {
+	var idPelicula = document.getElementById("idPelicula").value;
+	var titulo = document.getElementById("titulo").value;
+	var anioEstreno = document.getElementById("anioEstreno").value;
+	var pais = document.getElementById("pais").value;
+	var duracion = document.getElementById("duracion").value;
+	var sinopsis = document.getElementById("sinopsis").value;
+	
+	var url="";
+	
+	if(idPelicula != "") {
+		url = "http://localhost:9999/modificar_pelicula?idPelicula=" + idPelicula + "&titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&pais=" + pais.id + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
+	} else {
+		url = "http://localhost:9999/crear_pelicula?titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&pais=" + pais.id + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
+	}
+	
+	fetch(url)
+	.then(res => res.text())
+	.then(res => {
+		buscarPeliculas();
+		cerrarCrearPelicula();
+	})
+	.catch(e => {
+		console.log('Error importando archivo' + e.message);
+	});
+	
+}
 
-            // Rellenar la tabla con los datos recibidos
-            data.forEach(pelicula => {
-                const row = tabla.insertRow();
-
-                row.innerHTML = `
-                    <td>${pelicula.titulo}</td>
-                    <td>${pelicula.anio_estreno}</td>
-                    <td>${pelicula.pais.nombre}</td>
-                    <td>${pelicula.duracion}</td>
-                `;
-            });
-        })
-        .catch(error => {
-            console.error("Error al cargar las películas:", error);
-        });
-});
-
-
+function cargaInicial() {
+	let selectPais = document.getElementById("pais");
+	let selectPaisFiltro = document.getElementById("paisFiltro");
+	let selectGeneroFiltro = document.getElementById("generoFiltro");
+	
+	fetch("nombre_paises")
+	.then(res => res.text())
+	.then(json => {
+		const posts = JSON.parse(json);
+		let opt = document.createElement("option");
+		opt.value = 0;
+		opt.text = "";
+		selectPais.add(opt);
+		posts.forEach(pais => {
+			opt = document.createElement("option");
+			opt.value = pais.id;
+			opt.text = pais.nombre;
+			selectPais.add(opt);
+		});
+	})
+	
+	fetch("nombre_paises")
+	.then(res => res.text())
+	.then(json => {
+		const posts = JSON.parse(json);
+		let opt = document.createElement("option");
+		opt.value = 0;
+		opt.text = "";
+		selectPaisFiltro.add(opt);
+		posts.forEach(pais => {
+			opt = document.createElement("option");
+			opt.value = pais.id;
+			opt.text = pais.nombre;
+			selectPaisFiltro.add(opt);
+		});
+	})
+	
+	fetch("nombre_generos")
+	.then(res => res.text())
+	.then(json => {
+		const posts = JSON.parse(json);
+		let opt = document.createElement("option");
+		opt.value = 0;
+		opt.text = "";
+		selectGeneroFiltro.add(opt);
+		posts.forEach(genero => {
+			opt = document.createElement("option");
+			opt.value = genero.id;
+			opt.text = genero.nombre;
+			selectGeneroFiltro.add(opt);
+		});
+	})
+}

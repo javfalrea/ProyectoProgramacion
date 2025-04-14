@@ -4,25 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Películas</title>
-    <link rel="stylesheet" href="tablas.css">
+    <!-- <link rel="stylesheet" href="tablas.css"> -->
 </head>
-<body>
+<body onLoad="cargaInicial()">
 
     <h1>Películas</h1>
 
-    <div class="filters">
+    <div class="filtros">
         <input type="text" id="tituloFiltro" placeholder="Película">
         <input type="text" id="participanteFiltro" placeholder="Participante">
-        <select id="paisFiltro">
-            <option value="">Seleccionar país</option>
-            <!-- Aquí se llenarán los países desde el backend -->
-        </select>
-        <select id="generoFiltro">
-            <option value="">Seleccionar género</option>
-            <!-- Aquí se llenarán los géneros desde el backend -->
-        </select>
-        <button id="buscarPelicula">Buscar</button>
-        <button id="insertarPelicula">Insertar Película</button>
+        <select id="paisFiltro"></select>
+        <select id="generoFiltro"></select>
+        <button id="BotonBuscarPeliculas" onclick="buscarPeliculas()">Buscar</button>
+        <button id="botonCrearPelicula" onclick="abrirCrearPelicula()">Insertar Película</button>
     </div>
 
     <table id="tablaPeliculas">
@@ -35,37 +29,29 @@
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Aquí se mostrarán los resultados de las películas -->
-        </tbody>
+        <tbody id="contenidoTabla"></tbody>
     </table>
 
-    <!-- Modal para insertar película -->
-    <div id="modalInsertarPelicula" class="modal">
-        <div class="modal-content">
-            <span class="close" id="cerrarModal">&times;</span>
-            <h2>Insertar Nueva Película</h2>
-            <form id="formInsertarPelicula">
-                <label for="titulo">Título</label>
-                <input type="text" id="titulo" required><br><br>
+    <div id="modalPelicula" class="modal" style="display: none;">
+        <div class="contenidoModal">
+            <h2 style="text-align: center;">Nueva película</h2>
+            <label for="titulo">Título</label>
+            <input type="text" name="titulo" id="titulo">
+            <label for="anioEstreno">Año de estreno</label>
+            <input type="number" name="anioEstreno" id="anioEstreno">
+            <label for="pais">País</label>
+            <select name="pais" id="pais"></select>
+            <label for="duracion">Duración</label>
+            <input type="number" name="duracion" id="duracion">
+            <label for="sinopsis">Sinopsis</label>
+            <textarea name="sinopsis" id="sinopsis"></textarea>
 
-                <label for="anioEstreno">Año de estreno</label>
-                <input type="number" id="anioEstreno" required><br><br>
-
-                <label for="pais">País</label>
-                <select id="pais" required>
-                    <!-- Aquí se llenarán los países desde el backend -->
-                </select><br><br>
-
-                <label for="duracion">Duración</label>
-                <input type="number" id="duracion" required><br><br>
-
-                <label for="sinopsis">Sinopsis</label><br>
-                <textarea id="sinopsis" required></textarea><br><br>
-
-                <button type="submit">Aceptar</button>
-                <button type="button" id="cancelarModal">Cancelar</button>
-            </form>
+            <div style="display: flex; justify-content: space-around;">
+				<button onclick="gestionarPelicula()">Aceptar</button>
+				<button onclick="cerrarCrearPelicula()">Cancelar</button>
+			</div>
+			<input type="hidden" id="idPelicula">
+           
         </div>
     </div>
 
