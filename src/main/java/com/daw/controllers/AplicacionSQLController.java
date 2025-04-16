@@ -157,8 +157,8 @@ public class AplicacionSQLController {
 	@GetMapping("/buscar_peliculas")
 	public ResponseEntity<?> buscarPeliculas(@RequestParam(required = false) String titulo,
 			@RequestParam(required = false) String participante,
-			@RequestParam(required = false) Long idPais,
-			@RequestParam(required = false) Long idGenero
+			@RequestParam Long idPais,
+			@RequestParam Long idGenero
 			){
 		try {
 			return ResponseEntity.ok().body(servicio.buscarPeliculas(titulo, participante, idPais, idGenero));

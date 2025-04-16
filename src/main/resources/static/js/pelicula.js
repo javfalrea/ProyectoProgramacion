@@ -1,12 +1,17 @@
 function buscarPeliculas() {
 	var titulo = document.getElementById("tituloFiltro").value.trim();
 	var participante = document.getElementById("participanteFiltro").value.trim();
-	var pais = document.getElementById("paisFiltro").value;
-	var genero = document.getElementById("generoFiltro").value;
-	
-	pais = pais === "0" ? "" : pais;
-	genero = genero === "0" ? "" : genero;
-	
+	var paisStr = document.getElementById("paisFiltro").value;
+	var pais = parseInt(paisStr);
+	if(isNaN(paisStr)) {
+		pais = 0;
+	}
+	var generoStr = document.getElementById("generoFiltro").value;
+	var genero = parseInt(generoStr);
+	if(isNaN(genero)) {
+		genero = 0;
+	}
+		
 	fetch("http://localhost:9999/buscar_peliculas?titulo=" + titulo + "&participante=" + participante + "&idPais=" + pais + "&idGenero=" + genero)
 	.then(res => res.text())
 	.then(json => {
@@ -15,16 +20,16 @@ function buscarPeliculas() {
 		posts.forEach(fila => {
 			tabla += "<tr>";
 			tabla += "<td>" + fila.titulo + "</td>";
-			tabla += "<td>" + fila.anioEstreno + "</td>";
+			tabla += "<td>" + fila.anio_estreno + "</td>";
 			tabla += "<td>" + fila.pais.nombre + "</td>";
 			tabla += "<td>" + fila.duracion + "</td>";
-			tabla += "<td><button onclick=\"abrirModificarPelicula('" + fila.id + "','" + fila.titulo + "','" + fila.anioEstreno + "','" + fila.pais.id + "','" + fila.duracion + "','" + fila.sinopsis + "')\">Modificar</button><button onclick=\"eliminarPelicula('" + fila.id + "')\">Elimminar</button></td>";
+			tabla += "<td><button onclick=\"abrirModificarPelicula('" + fila.id + "','" + fila.titulo + "','" + fila.anioEstreno + "','" + fila.pais.id + "','" + fila.duracion + "','" + fila.sinopsis + "')\">Modificar</button><button onclick=\"eliminarPelicula('" + fila.id + "')\">Eliminar</button></td>";
 			tabla += "</tr>";
-		});
+		});	
 		
-		
-		var contenidoTabla = document.getElementById("contenidoTabla");
+		var contenidoTabla = document.getElementById("contenidoTabla");		
 		contenidoTabla.innerHTML = tabla;
+		
 	})
 	.catch(e => {
 		console.log('Error importando archivo: ' + e.message);
@@ -71,9 +76,9 @@ function gestionarPelicula() {
 	var url="";
 	
 	if(idPelicula != "") {
-		url = "http://localhost:9999/modificar_pelicula?idPelicula=" + idPelicula + "&titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&pais=" + pais.id + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
+		url = "http://localhost:9999/modificar_pelicula?idPelicula=" + idPelicula + "&titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&idPais=" + pais + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
 	} else {
-		url = "http://localhost:9999/crear_pelicula?titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&pais=" + pais.id + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
+		url = "http://localhost:9999/crear_pelicula?titulo=" + titulo + "&anioEstreno=" + anioEstreno + "&idPais=" + pais + "&duracion=" + duracion + "&sinopsis=" + sinopsis;
 	}
 	
 	fetch(url)
