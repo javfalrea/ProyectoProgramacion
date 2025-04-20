@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participantes</title>
+    <!-- <link rel="stylesheet" href="tablas.css"> -->
+</head>
+<body onLoad="cargaInicial()">
+
+    <h1>Participantes</h1>
+
+    <div class="filtros">
+        <input type="text" id="nombreFiltro" placeholder="Participante">
+		<button id="botonBuscarParticipante" onclick="buscarParticipantes()">Buscar</button>
+        <button id="botonCrearParticipante" onclick="abrirCrearParticipante()">Insertar Participante</button>
+    </div>
+
+    <table id="tablaParticipantes">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Fecha de nacimiento</th>
+                <th>País</th>>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="contenidoTabla"></tbody>
+    </table>
+
+    <div id="modalParticipante" class="modal" style="display: none;">
+        <div class="contenidoModal">
+            <h2 style="text-align: center;">Nuevo participante</h2>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="nombre">
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input type="date" name="fechaNacimiento" id="fechaNacimiento">
+            <label for="pais">País</label>
+            <select name="pais" id="pais"></select>
+
+            <div style="display: flex; justify-content: space-around;">
+				<button onclick="gestionarParticipante()">Aceptar</button>
+				<button onclick="cerrarCrearParticipante()">Cancelar</button>
+			</div>
+			<input type="hidden" id="idParticipante">
+           
+        </div>
+    </div>
+
+    <script src="js/participante.js"></script>
+</body>
+</html>
+
+
+

@@ -167,25 +167,16 @@ public class AplicacionSQLController {
 		}
 	}
 	
-	@GetMapping("/buscar_actor")
+	@GetMapping("/buscar_participante")
 	public ResponseEntity<?> buscarActor(@RequestParam(required = false) String nombre
 			){
 		try {
-			return ResponseEntity.ok().body(servicio.buscarActor(nombre));
+			return ResponseEntity.ok().body(servicio.buscarParticipante(nombre));
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}
 	}
-	
-	@GetMapping("/buscar_director")
-	public ResponseEntity<?> buscarDirector(@RequestParam(required = false) String nombre
-			){
-		try {
-			return ResponseEntity.ok().body(servicio.buscarDirector(nombre));
-		} catch (SQLException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
-		}
-	}
+
 	
 	@GetMapping("/crear_pais")
 	public ResponseEntity<?> crearPais(@RequestParam String continente,

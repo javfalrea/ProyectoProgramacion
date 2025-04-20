@@ -666,49 +666,10 @@ public class Servicio {
 	 	return peliculas;
 	 }
 	
-	public List<Participante> buscarActor(String nombreBq) throws SQLException {
+	public List<Participante> buscarParticipante(String nombreBq) throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
-		String selectPelicula = "SELECT DISTINCT p.*, COUNT(pp.id_pelicula) AS cantidad_peliculas FROM participante p JOIN pelicula_participante pp ON p.id = pp.id_participante WHERE (? IS NULL OR LOWER(nombre) LIKE LOWER(?)) AND ((pp.es_actor = true AND pp.es_director = false) OR (pp.es_actor = true AND pp.es_director = true)) GROUP BY p.id, p.nombre, p.id_pais, p.fecha_nacimiento HAVING COUNT(pp.id_pelicula) > 0";	
-		PreparedStatement ps = conn.prepareStatement(selectPelicula);
-		ps.setString(1, nombreBq);
-		ps.setString(2, "%" + nombreBq + "%");
-		ResultSet rs = ps.executeQuery();
-		List<Participante> participantes = new ArrayList<Participante>();
-		while (rs.next()) {
-			Long id = rs.getLong("id");
-			String nombre = rs.getString("nombre");
-			Long idPais = rs.getLong("id_pais");
-			Date fechaNacimiento = rs.getDate("fecha_nacimiento");
-			
-			String selectPais = "SELECT continente, nombre FROM pais WHERE id = ?";
-		    PreparedStatement ps2 = conn.prepareStatement(selectPais);
-		    ps2.setLong(1, idPais);
-		    ResultSet rs2 = ps2.executeQuery();
-		    rs2.next();
-		    
-		    String continente = rs2.getString("continente");
-		    String nombrePais = rs2.getString("nombre");
-		    
-	
-		    Pais pais = new Pais(idPais, continente, nombrePais);
-		    		
-			Participante participante = new Participante(id, nombre, pais, fechaNacimiento);
-			participantes.add(participante);
-			
-			ps2.close();
-			rs2.close();
-		}
-		
-		ps.close();
-		rs.close();
-		conn.close();
-		return participantes;
-	}
-	
-	public List<Participante> buscarDirector(String nombreBq) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
-		String selectPelicula = "SELECT DISTINCT p.*, COUNT(pp.id_pelicula) AS cantidad_peliculas FROM participante p JOIN pelicula_participante pp ON p.id = pp.id_participante WHERE (? IS NULL OR LOWER(nombre) LIKE LOWER(?)) AND ((pp.es_actor = false AND pp.es_director = true) OR (pp.es_actor = true AND pp.es_director = true)) GROUP BY p.id, p.nombre, p.id_pais, p.fecha_nacimiento HAVING COUNT(pp.id_pelicula) > 0";	
-		PreparedStatement ps = conn.prepareStatement(selectPelicula);
+		String selectParticipante = "SELECT * FROM participante WHERE ? IS NULL OR LOWER(nombre) LIKE LOWER(?)";	
+		PreparedStatement ps = conn.prepareStatement(selectParticipante);
 		ps.setString(1, nombreBq);
 		ps.setString(2, "%" + nombreBq + "%");
 		ResultSet rs = ps.executeQuery();

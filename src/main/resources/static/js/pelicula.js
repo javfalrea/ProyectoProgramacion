@@ -1,3 +1,10 @@
+/**
+ * Esta parte contiene dos problemas esencialmente. En primer lugar, la búsqueda de películas está incompleta, pues
+ * sólo permite buscar aquellas películas que tienen asignado al menos a un participante, cosa que no se quiere.
+ * Además, por su parte, el abrirModificarPelicula tiene un defecto, pues el año de estreno no aparece simultáneamente.
+ * El eliminar tampoco funciona.
+ */
+
 function buscarPeliculas() {
 	var titulo = document.getElementById("tituloFiltro").value.trim();
 	var participante = document.getElementById("participanteFiltro").value.trim();
@@ -20,7 +27,7 @@ function buscarPeliculas() {
 		posts.forEach(fila => {
 			tabla += "<tr>";
 			tabla += "<td>" + fila.titulo + "</td>";
-			tabla += "<td>" + fila.anio_estreno + "</td>";
+			tabla += "<td>" + fila.anioEstreno + "</td>";
 			tabla += "<td>" + fila.pais.nombre + "</td>";
 			tabla += "<td>" + fila.duracion + "</td>";
 			tabla += "<td><button onclick=\"abrirModificarPelicula('" + fila.id + "','" + fila.titulo + "','" + fila.anioEstreno + "','" + fila.pais.id + "','" + fila.duracion + "','" + fila.sinopsis + "')\">Modificar</button><button onclick=\"eliminarPelicula('" + fila.id + "')\">Eliminar</button></td>";
@@ -91,6 +98,17 @@ function gestionarPelicula() {
 		console.log('Error importando archivo' + e.message);
 	});
 	
+}
+
+function eliminarPelicula(idPelicula) {
+	fetch("http://localhost:9999/eliminar_pelicula?id=" + idPelicula)
+	.then(res => res.text())
+	.then(res => {
+		buscarPeliculas();
+	})
+	.catch(e => {
+		console.log('Error importando archivo' + e.message);
+	})
 }
 
 function cargaInicial() {
