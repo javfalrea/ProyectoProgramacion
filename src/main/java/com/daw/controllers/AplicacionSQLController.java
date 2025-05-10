@@ -167,6 +167,36 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/genero_pelicula")
+	public ResponseEntity<?> generoPelicula(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.generoPelicula(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/valoracion_pelicula")
+	public ResponseEntity<?> valoracionPelicula(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.valoracionPelicula(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/vista_pelicula")
+	public ResponseEntity<?> vistaPelicula(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.vistaPelicula(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
 	@GetMapping("/buscar_participante")
 	public ResponseEntity<?> buscarActor(@RequestParam(required = false) String nombre
 			){
@@ -259,6 +289,26 @@ public class AplicacionSQLController {
 	public ResponseEntity<?> nombreGeneros(){
 		try {
 			return ResponseEntity.ok().body(servicio.nombreGeneros());
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/director_pelicula")
+	public ResponseEntity<?> directorPelicula(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.directorPelicula(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/actor_pelicula")
+	public ResponseEntity<?> actorPelicula(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.actorPelicula(id));
 		} catch (SQLException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
 		}

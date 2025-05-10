@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Detalle de Película</title>
+</head>
+
+<body onload="cargarDetallePelicula()">
+	<h1>Detalle de Película</h1>
+	<div id="detallePelicula">
+		<p><strong>Título:</strong> <span id="titulo"></span></p>
+		<p><strong>Año de estreno:</strong> <span id="anio"></span></p>
+		<p><strong>País:</strong> <span id="pais"></span></p>
+		<p><strong>Duración:</strong> <span id="duracion"></span> min</p>
+		<p><strong>Dirección:</strong></p>
+		<ul id="director"></ul>
+		<p><strong>Sinopsis:</strong> <span id="sinopsis"></span></p>
+		<p><strong>Género:</strong></p>
+		<ul id="genero"></ul>
+		<p><strong>Reparto:</strong></p>
+		<ul id="actor"></ul>
+		<p><strong>Número de vistas: </strong><span id="contadorVistas"></span></p>
+		<button onclick="verVistas()">Vistas</button>		
+		<button id="botonCrearValoracion" onclick="abrirCrearValoracion()">Valorar</button>
+		<p><strong>Valoracion:</strong> <span id="nota"></span> estrellas</p>
+		<p><strong>Recomendada:</strong> <span id="recomendada"></span></p>
+		<p><strong>Crítica:</strong> <span id="critica"></span></p>
+
+	</div>
+
+	<div id="modalValoracion" class="modal" style="display: none;">
+		<div class="contenidoModal">
+			<h2 style="text-align: center;">Crear Valoración</h2>
+			<label for="notaM">Valoración</label>
+			<input type="number" name="notaM" id="notaM"></input>
+			<label for="recomendadaM">¿Recomendada?</label>
+			<input type="checkbox" name="recomendadaM" id="recomendadaM"></input>
+			<label for="criticaM">Crítica</label>
+			<input type="text" name="criticaM" id="criticaM">
+
+			<div style="display: flex; justify-content: space-around;">
+				<button onclick="gestionarValoracion()">Aceptar</button>
+				<button onclick="cerrarCrearValoracion()">Cancelar</button>
+			</div>
+			
+			<input type="hidden" id="idPelicula">
+
+
+		</div>
+	</div>
+
+	<script src="js/detallePelicula.js"></script>
+
+</body>
+
+</html>

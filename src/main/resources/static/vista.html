@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas</title>
+    <!-- <link rel="stylesheet" href="tablas.css"> -->
+</head>
+<body>
+
+    <h1>Vistas</h1>
+
+    <table id="tablaVistas">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+				<th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="contenidoTabla"></tbody>
+    </table>
+
+    <div id="modalVista" class="modal" style="display: none;">
+        <div class="contenidoModal">
+            <h2 style="text-align: center;">Nueva vista</h2>
+            <label for="fecha">Fecha</label>
+            <input type="date" name="fecha" id="fecha">
+
+            <div style="display: flex; justify-content: space-around;">
+				<button onclick="gestionarVista()">Aceptar</button>
+				<button onclick="cerrarCrearVista()">Cancelar</button>
+			</div>
+			<input type="hidden" id="idVista">
+           
+        </div>
+    </div>
+
+    <script src="js/vista.js"></script>
+</body>
+</html>

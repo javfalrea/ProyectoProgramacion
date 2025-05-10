@@ -20,9 +20,10 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>País</th>
                 <th>Fecha de nacimiento</th>
-                <th>País</th>>
                 <th>Acciones</th>
+				<th>Agregaciones</th>
             </tr>
         </thead>
         <tbody id="contenidoTabla"></tbody>
@@ -32,11 +33,11 @@
         <div class="contenidoModal">
             <h2 style="text-align: center;">Nuevo participante</h2>
             <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" id="nombre">
-            <label for="fechaNacimiento">Fecha de nacimiento</label>
-            <input type="date" name="fechaNacimiento" id="fechaNacimiento">
+            <input type="text" name="nombre" id="nombre">       
             <label for="pais">País</label>
             <select name="pais" id="pais"></select>
+			<label for="fechaNacimiento">Fecha de nacimiento</label>
+			<input type="date" name="fechaNacimiento" id="fechaNacimiento">
 
             <div style="display: flex; justify-content: space-around;">
 				<button onclick="gestionarParticipante()">Aceptar</button>
@@ -46,6 +47,25 @@
            
         </div>
     </div>
+	
+	<div id="modalAgregarParticipante" class="modal" style="display: none;">
+	        <div class="contenidoModal">
+	            <h2 style="text-align: center;">Agregar Participante</h2>
+	            <label for="pelicula">Película</label>
+	            <select name="pelicula" id="pelicula"></select>      
+	            <label for="esActor">Actor</label>
+	            <input type="checkbox" name="esActor" id="esActor"></input>
+				<label for="esDirector">Director</label>
+				<input type="checkbox" name="esDirector" id="esDirector">
+
+	            <div style="display: flex; justify-content: space-around;">
+					<button onclick="gestionarAgregarParticipante()">Aceptar</button>
+					<button onclick="cerrarAgregarParticipante()">Cancelar</button>
+				</div>
+				<input type="hidden" id="idAgregarParticipante">
+	           
+	        </div>
+	    </div>
 
     <script src="js/participante.js"></script>
 </body>
