@@ -314,4 +314,55 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/desagregar_participante")
+	public ResponseEntity<?> desagregarParticipante(@RequestParam Long idPelicula,
+			@RequestParam Long idParticipante){
+		try {
+			servicio.desagregarParticipante(idPelicula, idParticipante);
+			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/buscar_participanteid")
+	public ResponseEntity<?> buscarParticipanteId(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarParticipanteId(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/buscar_peliculaid")
+	public ResponseEntity<?> buscarPeliculaId(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarPeliculaId(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/pelicula_actor")
+	public ResponseEntity<?> peliculaActor(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.peliculaActor(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/pelicula_director")
+	public ResponseEntity<?> peliculaDirector(@RequestParam Long id
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.peliculaDirector(id));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
 }

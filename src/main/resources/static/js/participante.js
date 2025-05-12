@@ -11,7 +11,7 @@ function buscarParticipantes() {
 			tabla += "<td>" + fila.nombre + "</td>";
 			tabla += "<td>" + fila.pais.nombre + "</td>";
 			tabla += "<td>" + fila.fechaNacimiento + "</td>";
-			tabla += "<td><button onclick=\"abrirModificarParticipante('" + fila.id + "','" + fila.nombre + "','" + fila.pais.id + "','" + fila.fechaNacimiento + "')\">Modificar</button><button onclick=\"eliminarParticipante('" + fila.id + "')\">Eliminar</button></td>";
+			tabla += "<td><button onclick=\"abrirModificarParticipante('" + fila.id + "','" + fila.nombre + "','" + fila.pais.id + "','" + fila.fechaNacimiento + "')\">Modificar</button><button onclick=\"eliminarParticipante('" + fila.id + "')\">Eliminar</button><button onclick=\"verDetallesParticipante('" + fila.id + "')\">Detalles</button></td>";
 			tabla += "<td><button onclick=\"abrirAgregarParticipante('" + fila.id + "')\">Agregar participante</button></td>";
 			tabla += "</tr>";
 		});	
@@ -161,4 +161,8 @@ function cargaInicial() {
 			});
 		})
 	
+}
+
+function verDetallesParticipante(idParticipante) {
+    window.location.href = `detalleParticipante.html?id=${idParticipante}`;
 }

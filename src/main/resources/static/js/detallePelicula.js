@@ -7,14 +7,21 @@ function getIdPeliculaDesdeUrl() {
 
 function cargarDetallePelicula() {
 	const id = getIdPeliculaDesdeUrl();
+	
+	fetch(`http://localhost:9999/buscar_peliculaid?id=${id}`)
+		.then(res => res.json())
+		.then(p => {
+			document.getElementById("titulo").textContent = p.titulo;
+			document.getElementById("anio").textContent = p.anio_estreno;
+			document.getElementById("pais").textContent = p.pais.nombre;
+			document.getElementById("duracion").textContent = p.duracion;
+			document.getElementById("sinopsis").textContent = p.sinopsis;
+		})
+		.catch(e => console.log("Error: " + e.message));
+	
 	fetch(`http://localhost:9999/genero_pelicula?id=${id}`)
 		.then(res => res.json())
 		.then(gp => {
-			document.getElementById("titulo").textContent = gp[0].pelicula.titulo;
-			document.getElementById("anio").textContent = gp[0].pelicula.anio_estreno;
-			document.getElementById("pais").textContent = gp[0].pelicula.pais.nombre;
-			document.getElementById("duracion").textContent = gp[0].pelicula.duracion;
-			document.getElementById("sinopsis").textContent = gp[0].pelicula.sinopsis;
 			for (let i = 0; i < gp.length; i++) {
 				const li = document.createElement("li");
 				li.textContent = gp[i].genero.nombre;
@@ -28,7 +35,7 @@ function cargarDetallePelicula() {
 		.then(d => {
 			for (let i = 0; i < d.length; i++) {
 				const li = document.createElement("li");
-				li.textContent = d[i].nombre;
+				li.innerHTML = `${d[i].nombre} <button onclick="verDetallesParticipante('${d[i].id}')" class="botonPart">Detalles</button>`;				
 				document.getElementById("director").appendChild(li);
 			}
 		})
@@ -39,7 +46,7 @@ function cargarDetallePelicula() {
 		.then(a => {
 			for (let i = 0; i < a.length; i++) {
 				const li = document.createElement("li");
-				li.textContent = a[i].nombre;
+				li.innerHTML = `${a[i].nombre} <button onclick="verDetallesParticipante('${a[i].id}')" class="botonPart">Ver detalles</button>`;				
 				document.getElementById("actor").appendChild(li);
 			}
 		})
@@ -126,4 +133,8 @@ function abrirModificarValoracion(nota, recomendada, critica) {
 function verVistas() {
 	const idPelicula = getIdPeliculaDesdeUrl();
     window.location.href = `vista.html?id=${idPelicula}`;
+}
+
+function verDetallesParticipante(idParticipante) {
+    window.location.href = `detalleParticipante.html?id=${idParticipante}`;
 }
