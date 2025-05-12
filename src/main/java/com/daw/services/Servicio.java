@@ -1295,5 +1295,60 @@ public class Servicio {
 	 	conn.close();
 	 	return peliculas;
 	 }
+	
+	public void desagregarGenero(Long idPelicula, Long idGenero) throws SQLException {
+	    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario", "usuario");
+
+	    String deletePelGen = "DELETE FROM pelicula_genero WHERE id_pelicula = ? AND id_genero = ?";
+	    PreparedStatement ps = conn.prepareStatement(deletePelGen);
+	    ps.setLong(1, idPelicula);
+	    ps.setLong(2, idGenero);
+
+	    int respuesta = ps.executeUpdate();
+	    if (respuesta != 1) {
+	        ps.close();
+	        conn.close();
+	        throw new SQLException("No se ha podido desagregar el participante de la película.");
+	    }
+	}
+	
+	public List<Genero> buscarGenero(String nombreBq) throws SQLException {
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "usuario","usuario");
+		ResultSet rs;
+		PreparedStatement ps;
+		if(nombreBq == null) {
+			String selectGenero = "SELECT * FROM genero";
+			ps = conn.prepareStatement(selectGenero);
+
+			rs = ps.executeQuery();		
+		
+		} else {
+			String selectGenero = "SELECT * FROM genero WHERE LOWER(nombre) LIKE LOWER(?)";	
+			ps = conn.prepareStatement(selectGenero);
+			ps.setString(1, "%" + nombreBq + "%");
+			
+			rs = ps.executeQuery();
+			
+		}
+		
+		List<Genero> generos = new ArrayList<Genero>();
+		
+		while(rs.next()) {
+			Long id = rs.getLong("id");
+			Long codigo = rs.getLong("codigo");
+			String nombre = rs.getString("nombre");
+			
+			Genero genero = new Genero(id, codigo, nombre);
+			generos.add(genero);
+		}
+	
+		ps.close();
+		rs.close();
+		conn.close();
+		
+		return generos;
+		
+		
+	}
 	 	
 }

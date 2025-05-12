@@ -6,11 +6,13 @@
     <title>Géneros</title>
     <link rel="stylesheet" href="tablas.css">
 </head>
-<body onLoad="cargaInicial()">
+<body onload="cargaInicial()">
 
     <h1>Géneros</h1>
 
-    <div class="filtros">       
+    <div class="filtros">
+		<input type="text" id="nombreGenero" placeholder="Genero">
+		<button id="buscarGeneros" onclick="buscarGeneros()">Buscar</button>       
         <button id="botonCrearGenero" onclick="abrirCrearGenero()">Insertar Género</button>
     </div>
 

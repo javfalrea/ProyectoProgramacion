@@ -9,6 +9,11 @@
 </head>
 
 <body onload="cargarDetallePelicula()">
+	
+	<div class="paginas">
+	    <button onclick="location.href='pelicula.html'">Películas</button>
+	</div>
+	
 	<h1>Detalle de Película</h1>
 	
 	<div id="detallePelicula">
@@ -23,8 +28,8 @@
 		<ul id="genero"></ul>
 		<p><strong>Reparto:</strong></p>
 		<ul id="actor"></ul>
-		<p><strong>Número de vistas: </strong><span id="contadorVistas"></span></p>
-		<button onclick="verVistas()">Vistas</button>		
+		<p><strong>Número de vistas: </strong><span id="contadorVistas"></span>
+		<button onclick="verVistas()">Vistas</button></p>		
 		<button id="botonCrearValoracion" onclick="abrirCrearValoracion()">Valorar</button>
 		<p><strong>Valoracion:</strong> <span id="nota"></span> estrellas</p>
 		<p><strong>Recomendada:</strong> <span id="recomendada"></span></p>

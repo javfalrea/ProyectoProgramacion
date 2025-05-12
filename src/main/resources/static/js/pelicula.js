@@ -1,8 +1,3 @@
-/**
- * Esta parte contiene un problema esencialmente. La búsqueda de películas está incompleta, pues
- * sólo permite buscar aquellas películas que tienen asignado al menos a un participante, cosa que no se quiere.
- */
-
 function buscarPeliculas() {
 	var titulo = document.getElementById("tituloFiltro").value.trim();
 	var participante = document.getElementById("participanteFiltro").value.trim();

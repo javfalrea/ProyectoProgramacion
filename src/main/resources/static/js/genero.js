@@ -1,5 +1,6 @@
 function buscarGeneros() {	
-	fetch("http://localhost:9999/nombre_generos")
+	var nombre = document.getElementById("nombreGenero").value.trim();
+	fetch("http://localhost:9999/buscar_genero?nombre=" + nombre)
 	.then(res => res.text())
 	.then(json => {
 		const posts = JSON.parse(json);
@@ -115,9 +116,7 @@ function eliminarGenero(idGenero) {
 	})
 }
 
-function cargaInicial() {
-	buscarGeneros();
-	
+function cargaInicial() {	
 	let selectPelicula = document.getElementById("pelicula"); 
 	
 	fetch("buscar_peliculas?titulo=&participante=&idPais=0&idGenero=0")

@@ -365,4 +365,25 @@ public class AplicacionSQLController {
 		}
 	}
 	
+	@GetMapping("/desagregar_genero")
+	public ResponseEntity<?> desagregarGenero(@RequestParam Long idPelicula,
+			@RequestParam Long idGenero){
+		try {
+			servicio.desagregarGenero(idPelicula, idGenero);
+			return ResponseEntity.ok().body("Eliminación correcta");
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
+	@GetMapping("/buscar_genero")
+	public ResponseEntity<?> buscarGenero(@RequestParam(required = false) String nombre
+			){
+		try {
+			return ResponseEntity.ok().body(servicio.buscarGenero(nombre));
+		} catch (SQLException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); 
+		}
+	}
+	
 }
